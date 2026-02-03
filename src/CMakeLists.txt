@@ -287,7 +287,10 @@ if (NOT Eigen3_FOUND)
   set(OpenMVG_USE_INTERNAL_EIGEN ON)
   find_package(Eigen QUIET)
 else()
-  set(EIGEN_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
+  set(EIGEN_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/eigen)
+  set(OpenMVG_USE_INTERNAL_EIGEN ON)
+  find_package(Eigen QUIET)
+  #set(EIGEN_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
 endif()
 add_definitions(-DEIGEN_MPL2_ONLY)
 
@@ -299,6 +302,15 @@ add_definitions(-DEIGEN_MPL2_ONLY)
 # ==============================================================================
 find_package(Ceres QUIET HINTS ${CERES_DIR_HINTS})
 if (NOT Ceres_FOUND)
+  set(OpenMVG_USE_INTERNAL_CERES ON)
+  set(CERES_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/ceres-solver/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/ceres-solver/internal/ceres/miniglog
+    ${PROJECT_BINARY_DIR}/third_party/ceres-solver/config)
+    FILE(READ "${CMAKE_CURRENT_SOURCE_DIR}/third_party/ceres-solver/VERSION" CERES_CONFIG)
+    STRING(REGEX REPLACE "version ([0-9.]+).*" "\\1" CERES_VERSION ${CERES_CONFIG})
+  set(CERES_LIBRARIES openMVG_ceres)
+else()
   set(OpenMVG_USE_INTERNAL_CERES ON)
   set(CERES_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/ceres-solver/include
