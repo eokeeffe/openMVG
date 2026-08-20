@@ -23,11 +23,29 @@ target_link_libraries(openMVG_main_ConvertList
     ${STLPLUS_LIBRARY}
 )
 
+# list a folder of images, cluster them by GPS / visual-similarity / a hybrid
+# of both, and export a sfm_data file + Leaflet map per cluster.
+# GPS-only clustering always builds; --method visual/hybrid additionally
+# require -DOpenMVG_USE_OPENCV=ON (see openMVG/clustering/atomic/README.md).
+add_executable(openMVG_main_ComputeAtomicClustering main_ComputeAtomicClustering.cpp)
+target_link_libraries(openMVG_main_ComputeAtomicClustering
+  PRIVATE
+    openMVG_system
+    openMVG_image
+    openMVG_features
+    openMVG_sfm
+    openMVG_exif
+    openMVG_clustering
+    ${STLPLUS_LIBRARY}
+)
+
 # Installation rules
 set_property(TARGET openMVG_main_SfMInit_ImageListing PROPERTY FOLDER OpenMVG/software)
 install(TARGETS openMVG_main_SfMInit_ImageListing DESTINATION bin/)
 set_property(TARGET openMVG_main_ConvertList PROPERTY FOLDER OpenMVG/software)
 install(TARGETS openMVG_main_ConvertList DESTINATION bin/)
+set_property(TARGET openMVG_main_ComputeAtomicClustering PROPERTY FOLDER OpenMVG/software)
+install(TARGETS openMVG_main_ComputeAtomicClustering DESTINATION bin/)
 
 ###
 # Add executable that computes:

@@ -3,3 +3,5 @@ UNIT_TEST(
   kmeans
   "openMVG_numeric;openMVG_matching")
 
+add_subdirectory(atomic)
+
